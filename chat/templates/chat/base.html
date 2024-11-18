@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="enwan">
+        <h1>ChatApp</h1>
+        </div>
+    
+        <div id="chat_messages" ></div>
+
+        <form id="form" >
+            <input type="text" name="message">
+
+        </form>
+  
+        
+
+
+
+
+
+
+        
+
+        
+
+    </div> 
+    
+    <script type="text/javascript">
+        // this way iam creating the web socket end-point at the client side(front-end) that will connect to the back-end
+        // the router will connect this end point to the end point with the same url {ws/socket-server/}  // the route to this end point path("ws/socket-server",ChatroomConsumer.as_asgi()),
+    
+        let groupname = '{{groupname}}'
+        let url= `ws://${window.location.host}/ws/socket-server/${groupname}`
+        const chatsocket = new WebSocket(url)
+        // this function is trigered when the backend send data to the frontend by using functions like self.send
+        chatsocket.onmessage = function(e){
+            //parsing the json into java script obj
+            let data = JSON.parse(e.data)
+            console.log('data:',data)
+            if (data.type === 'text')
+            {
+            // here i will be editing on the div with id chat_messages to show the messages in it 
+                let chat = document.getElementById('chat_messages')
+                //beforeend allow new messages to appear at the top
+                chat.insertAdjacentHTML('afterend' , ` <div> <p>${data.message}</p> </div> `)
+            }
+
+        }
+        //creating refrence to the form elemrnt to manupilate it further like adding EventListener
+        let form = document.getElementById('form')
+        // e is the event parameter that contain some data about the event
+        form.addEventListener('submit',(e)=>{
+            e.preventDefault()
+            //the target here refer to the thing that trigered the event (the form) .message reger to the input named message
+            //.value refer to the actual value inside this input 
+            let message = e.target.message.value
+            // the same as json.dumps but in java script (from js to json)
+            chatsocket.send(JSON.stringify({
+                'message':message
+            }))
+            form.reset()
+        })
+    </script>   
+    
+    <style>
+        .container{
+            text-align: center;
+            width: 30%;
+            margin: 0 auto;
+            
+            
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+        #enwan {
+            background-color:#d0d0d0 ;
+            text-align: center;
+            border-bottom: 1.5px solid black;
+            padding: 10px;
+        }
+        #form{
+            background-color:#d0d0d0 ;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            border-top: 1.5px solid black;
+            padding: 20px;
+        }
+
+    </style>
+
+
+</body>
+</html>
