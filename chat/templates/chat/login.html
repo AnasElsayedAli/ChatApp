@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Chat App</title>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Login</h2>
+            <form action="#" method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="Username">Username</label>
+                    <input type="Username" id="Username" name="Username" required placeholder="Enter your Username">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                <div class="input-group">
+                    <button type="submit" class="btn">Login</button>
+                </div>
+            </form>
+            <p class="auth-switch">
+                Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>
+            </p>
+        </div>
+    </div>
+
+<style>
+        /* Global styles for both pages */
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #222; /* Dark background */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+
+    /* Container for authentication pages */
+    .auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+
+    .auth-box {
+    background-color: #333; /* Dark box background */
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    }
+
+    h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    }
+
+    .input-group {
+    margin-bottom: 15px;
+    text-align: left;
+    }
+
+    label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="Username"],
+    input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 8px;
+    background-color: #444; /* Dark input background */
+    color: white;
+    }
+
+    input[type="text"]:focus,
+    input[type="Username"]:focus,
+    input[type="password"]:focus {
+    outline: none;
+    border: 2px solid #4CAF50; /* Green outline on focus */
+    }
+
+    .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50; /* Green button */
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    }
+
+    .btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+    }
+
+    .auth-switch {
+    margin-top: 20px;
+    font-size: 14px;
+    }
+
+    .auth-switch a {
+    color: #4CAF50;
+    text-decoration: none;
+    }
+
+    .auth-switch a:hover {
+    text-decoration: underline;
+    }
+
+</style>   
+
+
+</body>
+</html>

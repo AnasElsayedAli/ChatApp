@@ -33,9 +33,9 @@ class ChatroomConsumer(WebsocketConsumer):
         parsed_text_data = json.loads(text_data)
         #iam sending it from the front end as message --> chatsocket.send(JSON.stringify({'message':message})
         message = parsed_text_data['message']
+        print(self.user)
         Message =Messages.objects.create(
             body=message,
-            # lazem akon 3amel nzam login
             author =self.user,
             group =self.group
         )
