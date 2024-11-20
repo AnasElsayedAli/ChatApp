@@ -1,4 +1,7 @@
 .conatiner
 {
- min-width: 40%;
+ display: flexbox;
+ flex-direction: row;
+ align-items: end;
+
 }

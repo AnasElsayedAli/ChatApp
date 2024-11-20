@@ -1,102 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
 </head>
-
 <body>
-    <div class="container">
-        <div id="enwan">
-        <h1>ChatApp</h1>
-        </div>
-    
-        <div id="chat_messages" ></div>
+  <div class="chat-container">
+    <!-- Header: App or group name -->
+    <div class="chat-header">
+      <h2>Chat App</h2>
+    </div>
 
-        <form id="form" >
-            <input type="text" name="message">
-
-        </form>
-  
+    <!-- Body: Messages will be displayed here -->
+    <div id="chat-body">
+      {% for mssg in messages_list %}
+      
+        {% if mssg.author == View_request_user %}
+          <div id="message_me">
+            <p><strong></strong> {{mssg.body}}</p>
+          </div>
+        {% else %}
         
+          <div class="message">
+            <p><strong> {{mssg.author}}:</strong> {{mssg.body}}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+      <!-- More messages will be loaded dynamically -->
+    </div>
 
+    <!-- Footer: Message input form -->
+    <div class="chat-footer">
+      <form id="chat-form">
+        <input type="text" id="message-input" placeholder="Type your message..." required>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
 
-
-
-
-
-        
-
-        
-
-    </div> 
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
     
-    <script type="text/javascript">
-        // this way iam creating the web socket end-point at the client side(front-end) that will connect to the back-end
-        // the router will connect this end point to the end point with the same url {ws/socket-server/}  // the route to this end point path("ws/socket-server",ChatroomConsumer.as_asgi()),
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
     
-        let groupname = '{{groupname}}'
-        let url= `ws://${window.location.host}/ws/socket-server/${groupname}`
-        const chatsocket = new WebSocket(url)
-        // this function is trigered when the backend send data to the frontend by using functions like self.send
-        chatsocket.onmessage = function(e){
-            //parsing the json into java script obj
-            let data = JSON.parse(e.data)
-            console.log('data:',data)
-            if (data.type === 'text')
-            {
-            // here i will be editing on the div with id chat_messages to show the messages in it 
-                let chat = document.getElementById('chat_messages')
-                //beforeend allow new messages to appear at the top
-                chat.insertAdjacentHTML('afterend' , ` <div> <p>${data.message}</p> </div> `)
-            }
-
-        }
-        //creating refrence to the form elemrnt to manupilate it further like adding EventListener
-        let form = document.getElementById('form')
-        // e is the event parameter that contain some data about the event
-        form.addEventListener('submit',(e)=>{
-            e.preventDefault()
-            //the target here refer to the thing that trigered the event (the form) .message reger to the input named message
-            //.value refer to the actual value inside this input 
-            let message = e.target.message.value
-            // the same as json.dumps but in java script (from js to json)
-            chatsocket.send(JSON.stringify({
-                'message':message
-            }))
-            form.reset()
-        })
-    </script>   
+    .chat-container {
+        width: 80%;
+        max-width: 600px;
+        height: 80vh;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #333;
+        border-radius: 10px;
+        background-color: #1f1f1f;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
     
-    <style>
-        .container{
-            text-align: center;
-            width: 30%;
-            margin: 0 auto;
-            
-            
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-        }
-        #enwan {
-            background-color:#d0d0d0 ;
-            text-align: center;
-            border-bottom: 1.5px solid black;
-            padding: 10px;
-        }
-        #form{
-            background-color:#d0d0d0 ;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            border-top: 1.5px solid black;
-            padding: 20px;
-        }
+    .chat-header {
+        padding: 15px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        font-size: 1.5rem;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    
+    #chat-body {
+        flex-grow: 1;
+        padding: 10px;
+        overflow-y: auto;
+        background-color: #2c2c2c;
+    }
+    
+    .message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #444;
+        color: #fff;
+        /*width: fit-content;*/
+        text-align: left; 
+        float: left; 
+        clear: both;
+    }
 
-    </style>
+    #message_me {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: #fff;
+      /*width: fit-content;*/
 
+      max-width: 80%;
+      text-align: left;
+      float: right; 
+      clear: both;
+    }
+    
+    .chat-footer {
+        padding: 10px;
+        background-color: #333;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+    
+    .chat-footer form {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .chat-footer input {
+        width: 85%;
+        padding: 8px;
+        border: 1px solid #555;
+        border-radius: 5px;
+        background-color: #444;
+        color: #fff;
+    }
+    
+    .chat-footer button {
+        width: 12%;
+        padding: 8px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .chat-footer button:hover {
+        background-color: #45a049;
+    }
+    #chat-body::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    #chat-body::-webkit-scrollbar-thumb {
+        background-color: #666;
+        border-radius: 10px;
+    }
+    
+    #chat-body::-webkit-scrollbar-track {
+        background: #333;
+    }
+</style>
+
+<script>
+  // Function to scroll to the bottom of the chat body
+  function smoothScrollToEnd() {
+    const chatBody = document.getElementById('chat-body');
+    chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom
+  }
+
+  let groupname = '{{groupname}}';
+  let url = `ws://${window.location.host}/ws/socket-server/${groupname}`;
+  const chatsocket = new WebSocket(url);
+
+  let form = document.getElementById('chat-form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const messageInput = document.getElementById('message-input');
+    const message = messageInput.value.trim();
+    if (message) {
+      chatsocket.send(JSON.stringify({
+        'message': message
+      }));
+      form.reset();
+    }
+  });
+
+  chatsocket.onmessage = function (e) {
+    let data = JSON.parse(e.data);
+    if (data.type === 'text') {
+      let chat = document.getElementById('chat-body');
+      console.log(data)
+      if (data.message_author == '{{View_request_user}}'){
+      chat.insertAdjacentHTML('beforeend', `<div id="message_me"><p><strong></strong> ${data.message_body}</p></div>`);
+      }
+      else{
+      chat.insertAdjacentHTML('beforeend', `<div class="message"><p><strong> ${data.message_author}:</strong> ${data.message_body}</p></div>`);
+      }
+      // Call smooth scroll after message is added
+      smoothScrollToEnd();
+    }
+  };
+
+  // Ensure scrolling to the bottom when the page loads or when new messages are added
+  window.onload = function() {
+    smoothScrollToEnd();
+  };
+</script>
 
 </body>
 </html>

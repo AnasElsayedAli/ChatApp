@@ -12,9 +12,11 @@ def main_chat_view(request,group_name=None):
         group_name= get_object_or_404(Chat_group, group_name="Main")
         group_messages_list= Messages.objects.filter(group=group_name)
         
+        
         context ={
-            'messages_list': group_messages_list, 
+            'messages_list': group_messages_list,
+            'View_request_user':request.user
         }
         
-        return render(request ,'chat/base.html',context)
+        return render(request ,'chat/base.html', context)
 
