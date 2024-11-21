@@ -1,12 +1,25 @@
 {
-    "version": 2,
+    "version": 3,
     "builds": [
-        {
-            "src": "manage.py",
-            "use": "@vercel/python"
-        }
+      {
+        "src": "chatApp/asgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb" }
+      },
+      {
+        "src": "manage.py",
+        "use": "@vercel/python"
+      }
     ],
     "routes": [
-        { "src": "/(.*)", "dest": "manage.py" }
+      {
+        "src": "/ws/socket-server/(?<chatroom_name>[^/]+)",
+        "dest": "chatApp/asgi.py"
+      },
+      {
+        "src": "/.*",
+        "dest": "chatApp/wsgi.py"
+      }
     ]
-}
+  }
+  
