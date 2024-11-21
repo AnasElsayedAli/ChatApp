@@ -6,6 +6,7 @@
   <title>Chat App</title>
 </head>
 <body>
+  {% include "chat/private_chat_list.html" %}
   <div class="chat-container">
     <!-- Header: App or group name -->
     <div class="chat-header">
@@ -169,6 +170,7 @@
   let groupname = '{{groupname}}';
   let url = `ws://${window.location.host}/ws/socket-server/${groupname}`;
   const chatsocket = new WebSocket(url);
+  console.log(groupname)
 
   let form = document.getElementById('chat-form');
   form.addEventListener('submit', (e) => {

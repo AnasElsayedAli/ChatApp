@@ -1,0 +1,67 @@
+
+    <div class="user-list-container">
+      <h3 id="enwanlist">Private Chats</h3>
+      <ul id="user-list">
+        {% for user in users %}   
+            {% if View_request_user == user %}
+            
+            {% else %}   
+            <li>
+                <!-- user.username in the url tag is an argument that will be bassed to the view -->
+                <a href="{% url 'private_chat' user.id %}">{{ user.username }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+
+<style>
+
+    #enwanlist{
+        padding-bottom: 10px;
+        border-bottom: 1px solid #444;
+    }
+    .user-list-container {
+        width: 17%;
+        padding: 15px;
+        height: 80% ;
+        background-color: #2c2c2c;
+        border-right: 1px solid #333;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .user-list-container h3 {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    #user-list {
+        list-style-type: none;
+    }
+
+    #user-list li {
+        margin-bottom: 10px;
+    }
+
+    #user-list a {
+        text-decoration: none;
+        color: #4CAF50;
+        padding: 8px;
+        display: block;
+        border: 1px solid #444;
+        border-radius: 5px;
+        background-color: #333;
+        text-align: center;
+    }
+
+    #user-list a:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+</style>
+
+
+</body>
+</html>

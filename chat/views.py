@@ -11,20 +11,46 @@ from django.contrib.auth.decorators import login_required
 # it automaticaly redirect the user if not loged in to the page specified in the settimgs LOGIN_URL = ''
 @login_required
 def main_chat_view(request,group_name=None):
+    #group name = user_id
     if group_name:
-        return render(request ,'chat/base.html',{'groupname':group_name})  
+        Priv_group_userIn = Chat_group.objects.filter(is_private=True , members=group_name).filter(members=request.user).first()
+        user_obj= User.objects.get(id=group_name)
+        
+        if Priv_group_userIn :
+            group= get_object_or_404(Chat_group, group_name=Priv_group_userIn)
+            group_messages_list= Messages.objects.filter(group=group)
+            users = User.objects.all()
+            context ={
+            'messages_list': group_messages_list,
+            'View_request_user':request.user,
+            'users':users,
+            'groupname':Priv_group_userIn
+            }
+            return render(request ,'chat/base.html',context) 
+        
+        else:
+            private_chat = Chat_group.objects.create(
+                is_private=True,
+            )
+            private_chat.save()
+            private_chat.members.add(user_obj)
+            private_chat.members.add(request.user)
+            return render(request ,'chat/base.html',{'groupname':private_chat})
+        
     else:
-        #in the model iam setting the __str_- to return the name not the id 
+        #in the model iam setting the __str__ to return the name not the id 
         group_name= get_object_or_404(Chat_group, group_name="Main")
         group_messages_list= Messages.objects.filter(group=group_name)
-        print(request.user)
-        
+        users = User.objects.all()
+        print(users)
         context ={
             'messages_list': group_messages_list,
-            'View_request_user':request.user
+            'View_request_user':request.user,
+            'users':users
         }
         
         return render(request ,'chat/base.html', context)
+    
 
     
 def signup(request):
